@@ -1,0 +1,10 @@
+{
+  "Name": "MS0 SteelSeries Sonar Volume Control",
+  "Description": "Controla el volumen de Steelseries Sonar desde tu Stream Dock",
+  "com.hotspot.streamdock.xxx.action1": {
+    "Name": "MS0",
+    "Tooltip": "Pongo algo para ver esto donde sale"
+  },
+  "Category": "Audio",
+  "Localization": {}
+}
