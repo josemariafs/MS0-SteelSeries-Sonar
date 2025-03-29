@@ -10,7 +10,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/icon"
+          "Image": "static/iconMaster"
         }
       ],
       "Controllers": [

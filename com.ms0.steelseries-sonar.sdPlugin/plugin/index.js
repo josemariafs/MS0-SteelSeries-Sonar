@@ -132,7 +132,7 @@ plugin.masterAction = new Actions({
         }else{
             prevVolumeDataMaster = volumeDataMaster;
             volumeDataMaster = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMaster));
@@ -184,7 +184,7 @@ plugin.gameAction = new Actions({
         }else{
             prevVolumeDataGame = volumeDataGame;
             volumeDataGame = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataGame));
@@ -238,7 +238,7 @@ plugin.chatAction = new Actions({
         }else{
             prevVolumeDataChat = volumeDataChat;
             volumeDataChat = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataChat));
@@ -290,7 +290,7 @@ plugin.mediaAction = new Actions({
         }else{
             prevVolumeDataMedia = volumeDataMedia;
             volumeDataMedia = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMedia));
@@ -340,7 +340,7 @@ plugin.auxAction = new Actions({
         }else{
             prevVolumeDataAux = volumeDataAux;
             volumeDataAux = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
@@ -391,7 +391,7 @@ plugin.auxMediaAction = new Actions({
         }else{
             prevVolumeDataAux = volumeDataAux;
             volumeDataAux = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
@@ -453,7 +453,7 @@ plugin.auxMediaAction = new Actions({
         }else{
             prevVolumeDataAux = volumeDataAux;
             volumeDataAux = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
 
@@ -464,7 +464,7 @@ plugin.auxMediaAction = new Actions({
         }else{
             prevVolumeDataMedia = volumeDataMedia;
             volumeDataMedia = 0;
-            window.socket.setTitle(data.context, "              Muteao");
+            window.socket.setTitle(data.context, "           Muted");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/mixer/Volume/'+JSON.stringify(volumeDataAux));
