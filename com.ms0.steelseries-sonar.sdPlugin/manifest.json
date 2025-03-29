@@ -14,8 +14,6 @@
         }
       ],
       "Controllers": [
-        "Keypad",
-        "Information",
         "Knob"
       ],
       "UserTitleEnabled": true,
@@ -31,12 +29,10 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/icon"
+          "Image": "static/iconGame"
         }
       ],
       "Controllers": [
-        "Keypad",
-        "Information",
         "Knob"
       ],
       "UserTitleEnabled": true,
@@ -44,7 +40,84 @@
       "Tooltip": "Pongo algo para ver esto donde sale",
       "UUID": "com.ms0.steelseries-sonar.gameAction",
       "PropertyInspectorPath": "propertyInspector/gameAction/index.html"
+    },
+    {
+      "Icon": "static/icon",
+      "Name": "Chat Dial Volume Mixer",
+      "States": [
+        {
+          "FontSize": "20",
+          "TitleAlignment": "center",
+          "Image": "static/iconChat"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pongo algo para ver esto donde sale",
+      "UUID": "com.ms0.steelseries-sonar.chatAction",
+      "PropertyInspectorPath": "propertyInspector/chatAction/index.html"
+    },
+    {
+      "Icon": "static/icon",
+      "Name": "Media Dial Volume Mixer",
+      "States": [
+        {
+          "FontSize": "20",
+          "TitleAlignment": "center",
+          "Image": "static/iconMedia"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pongo algo para ver esto donde sale",
+      "UUID": "com.ms0.steelseries-sonar.mediaAction",
+      "PropertyInspectorPath": "propertyInspector/mediaAction/index.html"
+    },
+    {
+      "Icon": "static/icon",
+      "Name": "Aux Dial Volume Mixer",
+      "States": [
+        {
+          "FontSize": "20",
+          "TitleAlignment": "center",
+          "Image": "static/iconAux"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pongo algo para ver esto donde sale",
+      "UUID": "com.ms0.steelseries-sonar.auxAction",
+      "PropertyInspectorPath": "propertyInspector/auxAction/index.html"
+    },
+    {
+      "Icon": "static/icon",
+      "Name": "Aux + Media Dial Volume Mixer",
+      "States": [
+        {
+          "FontSize": "20",
+          "TitleAlignment": "center",
+          "Image": "static/iconAuxMedia"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pongo algo para ver esto donde sale",
+      "UUID": "com.ms0.steelseries-sonar.auxMediaAction",
+      "PropertyInspectorPath": "propertyInspector/auxMediaAction/index.html"
     }
+
   ],
   "SDKVersion": 2,
   "Author": "MS0",

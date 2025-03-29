@@ -14,6 +14,18 @@ let prevVolumeDataMaster = '';
 let volumeDataGame = '';
 let prevVolumeDataGame = '';
 
+let volumeDataChat = '';
+let prevVolumeDataChat = '';
+
+let volumeDataMedia = '';
+let prevVolumeDataMedia = '';
+
+let volumeDataAux = '';
+let prevVolumeDataAux = '';
+
+let volumeDataAuxMedia = '';
+let prevVolumeDataAuxMedia = '';
+
 
 //////////////////////////////////////////////////
  
@@ -98,14 +110,14 @@ plugin.masterAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataMaster * 100) +"%");
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMaster * 100) +"%");
                 }else{
                     let aux = volumeDataMaster - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataMaster * 100) +"%");
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMaster * 100) +"%");
                 }
                 break;
             }
@@ -115,12 +127,12 @@ plugin.masterAction = new Actions({
 
         if (volumeDataMaster === 0){
             volumeDataMaster = prevVolumeDataMaster
-            window.socket.setTitle(data.context, parseInt(volumeDataMaster * 100) +"%");
+            window.socket.setTitle(data.context, "              "+parseInt(volumeDataMaster * 100) +"%");
 
         }else{
             prevVolumeDataMaster = volumeDataMaster;
             volumeDataMaster = 0;
-            window.socket.setTitle(data.context, "Muteao");
+            window.socket.setTitle(data.context, "              Muteao");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMaster));
@@ -150,14 +162,14 @@ plugin.gameAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataGame * 100) +"%");
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataGame * 100) +"%");
                 }else{
                     let aux = volumeDataGame - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataGame * 100) +"%");
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataGame * 100) +"%");
                 }
                 break;
             }
@@ -167,14 +179,295 @@ plugin.gameAction = new Actions({
 
         if (volumeDataGame === 0){
             volumeDataGame = prevVolumeDataGame
-            window.socket.setTitle(data.context, parseInt(volumeDataGame * 100) +"%");
+            window.socket.setTitle(data.context, "              "+parseInt(volumeDataGame * 100) +"%");
 
         }else{
             prevVolumeDataGame = volumeDataGame;
             volumeDataGame = 0;
-            window.socket.setTitle(data.context, "Muteao");
+            window.socket.setTitle(data.context, "              Muteao");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataGame));
+    }
+});
+
+//////////////////////////////////////////////////
+
+plugin.chatAction = new Actions({
+    default: {},
+    async dialRotate(data) {
+        let mixerSelected = 'chatRender';
+        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        console.log(volumeData)
+        if (sonarMode === 'streamer') {
+            volumeDataChat = volumeData.devices.chatRender.streamer.volume;
+        }else{
+            volumeDataChat = volumeData.devices.chatRender.classic.volume;
+        }       
+
+
+        switch (data.event) {
+            case 'dialRotate':
+                if (data.payload.ticks > 0) {
+                    let aux = volumeDataChat + 0.05;
+                    if (aux > 1){
+                        aux = 1;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataChat * 100) +"%");
+                }else{
+                    let aux = volumeDataChat - 0.05;
+                    if (aux < 0){
+                        aux = 0;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataChat * 100) +"%");
+                }
+                break;
+            }
+    },
+    async dialDown(data) {
+        console.log("Dial down chat");
+        console.log(data);
+        let mixerSelected = 'chat';
+
+        if (volumeDataChat === 0){
+            volumeDataChat = prevVolumeDataChat
+            window.socket.setTitle(data.context, "              "+parseInt(volumeDataChat * 100) +"%");
+
+        }else{
+            prevVolumeDataChat = volumeDataChat;
+            volumeDataChat = 0;
+            window.socket.setTitle(data.context, "              Muteao");
+
+        }
+        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataChat));
+    }
+});
+
+//////////////////////////////////////////////////
+
+plugin.mediaAction = new Actions({
+    default: {},
+    async dialRotate(data) {
+        let mixerSelected = 'media';
+        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        console.log(volumeData)
+        if (sonarMode === 'streamer') {
+            volumeDataMedia = volumeData.devices.media.streamer.volume;
+        }else{
+            volumeDataMedia = volumeData.devices.media.classic.volume;
+        }       
+
+
+        switch (data.event) {
+            case 'dialRotate':
+                if (data.payload.ticks > 0) {
+                    let aux = volumeDataMedia + 0.05;
+                    if (aux > 1){
+                        aux = 1;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMedia * 100) +"%");
+                }else{
+                    let aux = volumeDataMedia - 0.05;
+                    if (aux < 0){
+                        aux = 0;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMedia * 100) +"%");
+                }
+                break;
+            }
+    },
+    async dialDown(data) {
+        let mixerSelected = 'media';
+
+        if (volumeDataMedia === 0){
+            volumeDataMedia = prevVolumeDataMedia
+            window.socket.setTitle(data.context, "              "+parseInt(volumeDataMedia * 100) +"%");
+
+        }else{
+            prevVolumeDataMedia = volumeDataMedia;
+            volumeDataMedia = 0;
+            window.socket.setTitle(data.context, "              Muteao");
+
+        }
+        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMedia));
+    }
+});
+
+plugin.auxAction = new Actions({
+    default: {},
+    async dialRotate(data) {
+        let mixerSelected = 'aux';
+        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        console.log(volumeData)
+        if (sonarMode === 'streamer') {
+            volumeDataAux = volumeData.devices.aux.streamer.volume;
+        }else{
+            volumeDataAux = volumeData.devices.aux.classic.volume;
+        }       
+
+
+        switch (data.event) {
+            case 'dialRotate':
+                if (data.payload.ticks > 0) {
+                    let aux = volumeDataAux + 0.05;
+                    if (aux > 1){
+                        aux = 1;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+                }else{
+                    let aux = volumeDataAux - 0.05;
+                    if (aux < 0){
+                        aux = 0;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+                }
+                break;
+            }
+    },
+    async dialDown(data) {
+        let mixerSelected = 'aux';
+
+        if (volumeDataAux === 0){
+            volumeDataAux = prevVolumeDataAux
+            window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+
+        }else{
+            prevVolumeDataAux = volumeDataAux;
+            volumeDataAux = 0;
+            window.socket.setTitle(data.context, "              Muteao");
+
+        }
+        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
+    }
+});
+
+//////////////////////////////////////////////////
+plugin.auxMediaAction = new Actions({
+    default: {},
+    async dialRotate(data) {
+        let mixerSelected = 'aux';
+        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        console.log(volumeData)
+        if (sonarMode === 'streamer') {
+            volumeDataAux = volumeData.devices.aux.streamer.volume;
+        }else{
+            volumeDataAux = volumeData.devices.aux.classic.volume;
+        }       
+
+
+        switch (data.event) {
+            case 'dialRotate':
+                if (data.payload.ticks > 0) {
+                    let aux = volumeDataAux + 0.05;
+                    if (aux > 1){
+                        aux = 1;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, parseInt("              "+volumeDataAux * 100) +"%");
+                }else{
+                    let aux = volumeDataAux - 0.05;
+                    if (aux < 0){
+                        aux = 0;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+                }
+                break;
+            }
+    },
+    async dialDown(data) {
+        let mixerSelected = 'aux';
+
+        if (volumeDataAux === 0){
+            volumeDataAux = prevVolumeDataAux
+            window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+
+        }else{
+            prevVolumeDataAux = volumeDataAux;
+            volumeDataAux = 0;
+            window.socket.setTitle(data.context, "              Muteao");
+
+        }
+        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
+    }
+});
+//////////////////////////////////////////////////
+
+
+plugin.auxMediaAction = new Actions({
+    default: {},
+    async dialRotate(data) {
+        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        console.log(volumeData)
+        if (sonarMode === 'streamer') {
+            volumeDataAux = volumeData.devices.aux.streamer.volume;
+            volumeDataMedia = volumeData.devices.media.streamer.volume;
+        }else{
+            volumeDataAux = volumeData.devices.aux.classic.volume;
+            volumeDataMedia = volumeData.devices.media.classic.volume;
+        }       
+
+
+        switch (data.event) {
+            case 'dialRotate':
+                if (data.payload.ticks > 0) {
+                    let aux = volumeDataAux + 0.05;
+                    if (aux > 1){
+                        aux = 1;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/aux/Volume/'+JSON.stringify(aux));
+                    aux = volumeDataMedia + 0.05;
+                    if (aux > 1){
+                        aux = 1;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+                }else{
+                    let aux = volumeDataAux - 0.05;
+                    if (aux < 0){
+                        aux = 0;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/aux/Volume/'+JSON.stringify(aux));
+                    aux = volumeDataMedia - 0.05;
+                    if (aux < 0){
+                        aux = 0;
+                    }
+                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(aux));
+                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+                }
+                break;
+            }
+    },
+    async dialDown(data) {
+
+        if (volumeDataAux === 0){
+            volumeDataAux = prevVolumeDataAux
+            window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+
+        }else{
+            prevVolumeDataAux = volumeDataAux;
+            volumeDataAux = 0;
+            window.socket.setTitle(data.context, "              Muteao");
+
+        }
+
+        if (volumeDataMedia === 0){
+            volumeDataMedia = prevVolumeDataMedia
+            window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+
+        }else{
+            prevVolumeDataMedia = volumeDataMedia;
+            volumeDataMedia = 0;
+            window.socket.setTitle(data.context, "              Muteao");
+
+        }
+        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/mixer/Volume/'+JSON.stringify(volumeDataAux));
+        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(volumeDataMedia));
     }
 });
