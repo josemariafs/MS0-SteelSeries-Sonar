@@ -26,6 +26,7 @@ let prevVolumeDataAux = '';
 let volumeDataAuxMedia = '';
 let prevVolumeDataAuxMedia = '';
 
+let alignRight = "          "
 
 //////////////////////////////////////////////////
  
@@ -88,7 +89,9 @@ fetch(
       console.error("Error reading file:", error);
 
     });
-//////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+////////////////////////    MASTER      //////////////////////////
+//////////////////////////////////////////////////////////////////
 
 plugin.masterAction = new Actions({
     default: {},
@@ -110,14 +113,14 @@ plugin.masterAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMaster * 100) +"%");
+                    window.socket.setTitle(data.context, ""+parseInt(volumeDataMaster * 100) +"%");
                 }else{
                     let aux = volumeDataMaster - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMaster * 100) +"%");
+                    window.socket.setTitle(data.context, ""+parseInt(volumeDataMaster * 100) +"%");
                 }
                 break;
             }
@@ -127,12 +130,12 @@ plugin.masterAction = new Actions({
 
         if (volumeDataMaster === 0){
             volumeDataMaster = prevVolumeDataMaster
-            window.socket.setTitle(data.context, "              "+parseInt(volumeDataMaster * 100) +"%");
+            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMaster * 100) +"%");
 
         }else{
             prevVolumeDataMaster = volumeDataMaster;
             volumeDataMaster = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, alignRight+"MUTED");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMaster));
@@ -140,7 +143,9 @@ plugin.masterAction = new Actions({
 });
 
 
-//////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+////////////////////////      GAME      //////////////////////////
+//////////////////////////////////////////////////////////////////
 
 plugin.gameAction = new Actions({
     default: {},
@@ -162,14 +167,14 @@ plugin.gameAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataGame * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataGame * 100) +"%");
                 }else{
                     let aux = volumeDataGame - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataGame * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataGame * 100) +"%");
                 }
                 break;
             }
@@ -179,19 +184,21 @@ plugin.gameAction = new Actions({
 
         if (volumeDataGame === 0){
             volumeDataGame = prevVolumeDataGame
-            window.socket.setTitle(data.context, "              "+parseInt(volumeDataGame * 100) +"%");
+            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataGame * 100) +"%");
 
         }else{
             prevVolumeDataGame = volumeDataGame;
             volumeDataGame = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, alignRight+"MUTED");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataGame));
     }
 });
 
-//////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+////////////////////////      CHAT      //////////////////////////
+//////////////////////////////////////////////////////////////////
 
 plugin.chatAction = new Actions({
     default: {},
@@ -214,14 +221,14 @@ plugin.chatAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataChat * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataChat * 100) +"%");
                 }else{
                     let aux = volumeDataChat - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataChat * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataChat * 100) +"%");
                 }
                 break;
             }
@@ -233,19 +240,21 @@ plugin.chatAction = new Actions({
 
         if (volumeDataChat === 0){
             volumeDataChat = prevVolumeDataChat
-            window.socket.setTitle(data.context, "              "+parseInt(volumeDataChat * 100) +"%");
+            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataChat * 100) +"%");
 
         }else{
             prevVolumeDataChat = volumeDataChat;
             volumeDataChat = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, alignRight+"MUTED");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataChat));
     }
 });
 
-//////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+////////////////////////     MEDIA      //////////////////////////
+//////////////////////////////////////////////////////////////////
 
 plugin.mediaAction = new Actions({
     default: {},
@@ -268,14 +277,14 @@ plugin.mediaAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMedia * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMedia * 100) +"%");
                 }else{
                     let aux = volumeDataMedia - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataMedia * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMedia * 100) +"%");
                 }
                 break;
             }
@@ -285,17 +294,21 @@ plugin.mediaAction = new Actions({
 
         if (volumeDataMedia === 0){
             volumeDataMedia = prevVolumeDataMedia
-            window.socket.setTitle(data.context, "              "+parseInt(volumeDataMedia * 100) +"%");
+            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMedia * 100) +"%");
 
         }else{
             prevVolumeDataMedia = volumeDataMedia;
             volumeDataMedia = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, alignRight+"MUTED");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMedia));
     }
 });
+
+//////////////////////////////////////////////////////////////////
+////////////////////////      AUX       //////////////////////////
+//////////////////////////////////////////////////////////////////
 
 plugin.auxAction = new Actions({
     default: {},
@@ -318,14 +331,14 @@ plugin.auxAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataAux * 100) +"%");
                 }else{
                     let aux = volumeDataAux - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataAux * 100) +"%");
                 }
                 break;
             }
@@ -335,70 +348,21 @@ plugin.auxAction = new Actions({
 
         if (volumeDataAux === 0){
             volumeDataAux = prevVolumeDataAux
-            window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
+            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataAux * 100) +"%");
 
         }else{
             prevVolumeDataAux = volumeDataAux;
             volumeDataAux = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, alignRight+"MUTED");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
     }
 });
 
-//////////////////////////////////////////////////
-plugin.auxMediaAction = new Actions({
-    default: {},
-    async dialRotate(data) {
-        let mixerSelected = 'aux';
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        console.log(volumeData)
-        if (sonarMode === 'streamer') {
-            volumeDataAux = volumeData.devices.aux.streamer.volume;
-        }else{
-            volumeDataAux = volumeData.devices.aux.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataAux + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt("              "+volumeDataAux * 100) +"%");
-                }else{
-                    let aux = volumeDataAux - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
-                }
-                break;
-            }
-    },
-    async dialDown(data) {
-        let mixerSelected = 'aux';
-
-        if (volumeDataAux === 0){
-            volumeDataAux = prevVolumeDataAux
-            window.socket.setTitle(data.context, "              "+parseInt(volumeDataAux * 100) +"%");
-
-        }else{
-            prevVolumeDataAux = volumeDataAux;
-            volumeDataAux = 0;
-            window.socket.setTitle(data.context, "           Muted");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
-    }
-});
-//////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////
+///////////////////////    AUX+MEDIA    //////////////////////////
+//////////////////////////////////////////////////////////////////
 
 plugin.auxMediaAction = new Actions({
     default: {},
@@ -453,7 +417,7 @@ plugin.auxMediaAction = new Actions({
         }else{
             prevVolumeDataAux = volumeDataAux;
             volumeDataAux = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, "MUTED");
 
         }
 
@@ -464,7 +428,7 @@ plugin.auxMediaAction = new Actions({
         }else{
             prevVolumeDataMedia = volumeDataMedia;
             volumeDataMedia = 0;
-            window.socket.setTitle(data.context, "           Muted");
+            window.socket.setTitle(data.context, "MUTED");
 
         }
         setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/mixer/Volume/'+JSON.stringify(volumeDataAux));

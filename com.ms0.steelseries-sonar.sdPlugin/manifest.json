@@ -10,7 +10,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/iconMaster"
+          "Image": "static/iconpack3/iconMaster"
         }
       ],
       "Controllers": [
@@ -29,7 +29,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/iconGame"
+          "Image": "static/iconpack3/iconGame"
         }
       ],
       "Controllers": [
@@ -48,7 +48,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/iconChat"
+          "Image": "static/iconpack3/iconChat"
         }
       ],
       "Controllers": [
@@ -67,7 +67,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/iconMedia"
+          "Image": "static/iconpack3/iconMedia"
         }
       ],
       "Controllers": [
@@ -86,7 +86,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/iconAux"
+          "Image": "static/iconpack3/iconAux"
         }
       ],
       "Controllers": [
@@ -105,7 +105,7 @@
         {
           "FontSize": "20",
           "TitleAlignment": "center",
-          "Image": "static/iconAuxMedia"
+          "Image": "static/iconpack3/iconAuxMedia"
         }
       ],
       "Controllers": [
