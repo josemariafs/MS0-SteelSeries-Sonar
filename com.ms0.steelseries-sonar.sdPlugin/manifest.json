@@ -2,10 +2,13 @@
   "Actions": [
     {
       "Icon": "static/icon",
-      "Name": "Dials Volume Mixer",
+      "Name": "Master Dial Volume Mixer",
+      "Encoder": {
+        "layout": "layouts/dials.json"
+    },
       "States": [
         {
-          "FontSize": "12",
+          "FontSize": "20",
           "TitleAlignment": "center",
           "Image": "static/icon"
         }
@@ -18,11 +21,32 @@
       "UserTitleEnabled": true,
       "SupportedInMultiActions": false,
       "Tooltip": "Pongo algo para ver esto donde sale",
-      "UUID": "com.mirabox.counter.action1",
-      "PropertyInspectorPath": "propertyInspector/action1/index.html"
+      "UUID": "com.ms0.steelseries-sonar.masterAction",
+      "PropertyInspectorPath": "propertyInspector/masterAction/index.html"
+    },
+    {
+      "Icon": "static/icon",
+      "Name": "Game Dial Volume Mixer",
+      "States": [
+        {
+          "FontSize": "20",
+          "TitleAlignment": "center",
+          "Image": "static/icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information",
+        "Knob"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pongo algo para ver esto donde sale",
+      "UUID": "com.ms0.steelseries-sonar.gameAction",
+      "PropertyInspectorPath": "propertyInspector/gameAction/index.html"
     }
   ],
-  "SDKVersion": 1,
+  "SDKVersion": 2,
   "Author": "MS0",
   "Name": "MS0 SteelSeries Sonar",
   "Icon": "static/icon",

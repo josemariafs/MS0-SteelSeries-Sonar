@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>MS0 Sonar Volume Control</title>
+    <link rel="stylesheet" href="../../static/css/sdpi.css">
+</head>
+
+<body>
+    <div class="sdpi-wrapper" style="display: none">
+        <div class="sdpi-heading">Streamer Mode</div>
+        <select id="sonar-mode" onchange="getFromDom()">
+            <option value="streamer">On</option>
+            <option value="classic">Off</option>
+        </select>
+        <div class="sdpi-heading">Select Output Device</div>
+        <select id="output-device"  onchange="getFromDom()">
+            <option value="output_device_master">Altavoces</option>
+            <option value="output_device_master">Auriculares</option>
+        </select>
+        <div class="sdpi-heading">Select Output Mixer</div>
+        <select id="output-mixer" onchange="getFromDom()">
+            <option value="masters">Master</option>
+            <option value="game">Game</option>
+            <option value="charRender">Chat</option>
+            <option value="media">Media</option>
+            <option value="aux">Aux</option>
+        </select>
+    </div>
+    <script src="../utils/common.js"></script>
+    <script src="../utils/action.js"></script>
+    <script src="index.js"></script>
+
+
+
+    <script>
+$SD.on('connected', (jsonObj) => connected(jsonObj));
+function connected(jsonObj) {
+  console.log(`[connected] ${JSON.stringify(jsonObj)}`);
+
+  $SD.on('com.ms0.steelseries-sonar.action1.sendToPlugin', (jsonObj) => action.onSendToPlugin(jsonObj));
+};
+
+const action = {
+                onSendToPlugin: (jsonObj) => {
+                console.log(`[onSendToPlugin] ${JSON.stringify(jsonObj)}`);
+                if(jsonObj.payload) {
+                    $SD.api.setSettings(jsonObj.context, jsonObj.payload);
+                }
+            },
+        }
+async function getFetch(url) {
+  try {
+    const response = await fetch(url).then((response) => response.json());
+    return response;
+  } catch (error) {
+    console.error("Error in getFetch:", error);
+    throw error;
+  }
+}
+
+fetch(
+  "file:///C:/ProgramData/SteelSeries/SteelSeries%20Engine%203/coreProps.json"
+)
+  .then((response) => response.json())
+  .then(async (data) => {
+    let ggEncryptedAddress = data.ggEncryptedAddress;
+
+    let subAppsData = await getFetch(
+      "https://" + ggEncryptedAddress + "/subApps"
+    );
+
+    let webServerAddress = subAppsData.subApps.sonar.metadata.webServerAddress;
+
+
+    let sonarMode = await getFetch(webServerAddress + "/mode/");
+
+    if (sonarMode === "stream"){
+        sonarMode = "streamer";
+    }
+
+  })
+  .catch((error) => {
+    console.error("Error reading file:", error);
+  });
+
+function getFromDom() {
+  let mixerSelected = document.getElementById("output-mixer").value;
+  let sonarMode = document.getElementById("sonar-mode").value;
+  let outputSelected = document.getElementById("output-device").value;
+
+  console.log("Mixer selected:", mixerSelected);
+  console.log("Sonar mode selected:", sonarMode);
+  console.log("Output selected:", outputSelected);
+
+  // Send data to the Stream Deck plugin
+  console.log("$SD");
+  console.log($SD);
+  console.log("$SD.api");
+  console.log($SD.api);
+
+  let payload = JSON.stringify({
+      mixerSelected: mixerSelected,
+      sonarMode: sonarMode,
+      outputSelected: outputSelected
+  });
+
+  $SD.api.sendToPlugin($SD.uuid, $SD.actionInfo["action1"], payload);
+
+
+
+  return ({ mixerSelected, sonarMode, outputSelected });
+}
+
+    </script>
+</body>
+
+</html>

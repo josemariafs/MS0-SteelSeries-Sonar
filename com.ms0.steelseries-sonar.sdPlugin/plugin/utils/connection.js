@@ -54,25 +54,6 @@ class EventEmitter {
         return Array.from(this.events.keys());
     }
     /**
-     * Gets the number of event listeners for the event named {@link eventName}. When a {@link listener} is defined, only matching event listeners are counted.
-     * @param eventName Name of the event.
-     * @param listener Optional event listener to count.
-     * @returns Number of event listeners.
-     */
-    listenerCount(eventName, listener) {
-        const listeners = this.events.get(eventName);
-        if (listeners === undefined || listener == undefined) {
-            return listeners?.length || 0;
-        }
-        let count = 0;
-        listeners.forEach((ev) => {
-            if (ev.listener === listener) {
-                count++;
-            }
-        });
-        return count;
-    }
-    /**
      * Gets the event listeners for the event named {@link eventName}.
      * @param eventName Name of the event.
      * @returns The event listeners.
