@@ -3,16 +3,15 @@
     {
       "Icon": "static/icon",
       "Name": "Master Dial Volume Mixer",
-      "Encoder": {
-        "layout": "layouts/dials.json"
-    },
+
       "States": [
         {
+          "Image": "static/iconpack3/iconMaster",
           "FontSize": "20",
-          "TitleAlignment": "center",
-          "Image": "static/iconpack3/iconMaster"
+          "TitleAlignment": "center"
         }
       ],
+      
       "Controllers": [
         "Knob"
       ],

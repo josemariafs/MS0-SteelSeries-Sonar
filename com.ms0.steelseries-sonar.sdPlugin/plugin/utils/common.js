@@ -38,6 +38,7 @@ class Plugins {
 }
 
 window.connectElgatoStreamDeckSocket = function () {
+    console.log("connectElgatoStreamDeckSocket", arguments);
     const uuid = arguments[1], event = arguments[2];
     window.info = JSON.parse(arguments[3]);
     window.socket = new WebSocket("ws://127.0.0.1:" + arguments[0]);
@@ -47,6 +48,11 @@ window.connectElgatoStreamDeckSocket = function () {
             event: "openUrl",
             payload: { url }
         }));
+    };
+
+    WebSocket.prototype.getInfo = function () {
+
+        console.log("getInfo");
     };
 
     WebSocket.prototype.sendToPropertyInspector = function (payload) {
@@ -110,6 +116,15 @@ window.connectElgatoStreamDeckSocket = function () {
             }
         }));
     };
+
+      WebSocket.prototype.setFeedbackLayout = function (context, layout) {
+        this.send(JSON.stringify({
+            event: "setFeedbackLayout",
+            payload: { layout },
+            context
+        }));
+    };
+
 
     WebSocket.prototype.setState = function (context, state) {
         this.send(JSON.stringify({

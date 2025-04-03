@@ -105,6 +105,8 @@ plugin.masterAction = new Actions({
     async dialRotate(data) {
         let mixerSelected = 'master';
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        console.log(108)
+        console.log(volumeData)
         if (sonarMode === 'streamer') {
             volumeDataMaster = volumeData.masters.streamer.volume;
         }else{
@@ -114,23 +116,22 @@ plugin.masterAction = new Actions({
 
         switch (data.event) {
             case 'dialRotate':
-                
-            break;
-            case 'dialRotate':
                 if (data.payload.ticks > 0) {
                     let aux = volumeDataMaster + 0.05;
+                    console.log(124)
+                    console.log(aux)
                     if (aux > 1){
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, ""+parseInt(volumeDataMaster * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }else{
                     let aux = volumeDataMaster - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, ""+parseInt(volumeDataMaster * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }
                 break;
             }
@@ -167,10 +168,14 @@ plugin.gameAction = new Actions({
             }else{
                 volumeDataGame = volumeData.devices.game.classic.volume;
             }    
+            const layout = "$B1"
+
+            window.socket.setFeedbackLayout(context,layout); 
             window.socket.setTitle(context, alignRight + parseInt(volumeDataGame * 100) + "%");
         } catch (error) {
             console.error("Error on connect:", error);
         }
+
     },
     async dialRotate(data) {
         let mixerSelected = 'game';
@@ -190,14 +195,14 @@ plugin.gameAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataGame * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }else{
                     let aux = volumeDataGame - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataGame * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }
                 break;
             }
@@ -257,14 +262,14 @@ plugin.chatAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataChat * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }else{
                     let aux = volumeDataChat - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataChat * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }
                 break;
             }
@@ -326,14 +331,14 @@ plugin.mediaAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMedia * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }else{
                     let aux = volumeDataMedia - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMedia * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }
                 break;
             }
@@ -393,14 +398,14 @@ plugin.auxAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataAux * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }else{
                     let aux = volumeDataAux - 0.05;
                     if (aux < 0){
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(volumeDataAux * 100) +"%");
+                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
                 }
                 break;
             }
@@ -468,7 +473,7 @@ plugin.auxMediaAction = new Actions({
                         aux = 1;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(aux * 100) +"%");
                 }else{
                     let aux = volumeDataAux - 0.05;
                     if (aux < 0){
@@ -480,7 +485,7 @@ plugin.auxMediaAction = new Actions({
                         aux = 0;
                     }
                     setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(aux * 100) +"%");
                 }
                 break;
             }
