@@ -30,16 +30,6 @@ let alignRight = "          "
 
 //////////////////////////////////////////////////
  
-const action = {
-    onSendToPlugin: (jsonObj) => {
-        console.log(`[onSendToPlugin] ${JSON.stringify(jsonObj)}`);
-        if(jsonObj.payload) {
-            console.log("jsonObj.payload", jsonObj.payload);
-            $SD.api.setSettings(jsonObj.context, jsonObj.payload);
-        }
-    },
-}
-
 async function getFetch(url) {
     try {
       const response = await fetch(url).then((response) => response.json());
@@ -89,12 +79,29 @@ fetch(
       console.error("Error reading file:", error);
 
     });
+
+
+
 //////////////////////////////////////////////////////////////////
 ////////////////////////    MASTER      //////////////////////////
 //////////////////////////////////////////////////////////////////
 
 plugin.masterAction = new Actions({
     default: {},
+    async _willAppear({ context, payload }) {
+        try {
+            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+            if (sonarMode === 'streamer') {
+                volumeDataMaster = volumeData.masters.streamer.volume;
+            } else {
+                volumeDataMaster = volumeData.masters.classic.volume;
+            }
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataMaster * 100) + "%");
+        } catch (error) {
+            console.error("Error on connect:", error);
+        }
+    },
+
     async dialRotate(data) {
         let mixerSelected = 'master';
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
@@ -106,6 +113,9 @@ plugin.masterAction = new Actions({
 
 
         switch (data.event) {
+            case 'dialRotate':
+                
+            break;
             case 'dialRotate':
                 if (data.payload.ticks > 0) {
                     let aux = volumeDataMaster + 0.05;
@@ -149,6 +159,19 @@ plugin.masterAction = new Actions({
 
 plugin.gameAction = new Actions({
     default: {},
+    async _willAppear({ context, payload }) {
+        try {
+            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+            if (sonarMode === 'streamer') {
+                volumeDataGame = volumeData.devices.game.streamer.volume;
+            }else{
+                volumeDataGame = volumeData.devices.game.classic.volume;
+            }    
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataGame * 100) + "%");
+        } catch (error) {
+            console.error("Error on connect:", error);
+        }
+    },
     async dialRotate(data) {
         let mixerSelected = 'game';
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
@@ -202,6 +225,19 @@ plugin.gameAction = new Actions({
 
 plugin.chatAction = new Actions({
     default: {},
+    async _willAppear({ context, payload }) {
+        try {
+            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+            if (sonarMode === 'streamer') {
+                volumeDataChat = volumeData.devices.chatRender.streamer.volume;
+            }else{
+                volumeDataChat = volumeData.devices.chatRender.classic.volume;
+            }      
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataChat * 100) + "%");
+        } catch (error) {
+            console.error("Error on connect:", error);
+        }
+    },
     async dialRotate(data) {
         let mixerSelected = 'chatRender';
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
@@ -258,6 +294,19 @@ plugin.chatAction = new Actions({
 
 plugin.mediaAction = new Actions({
     default: {},
+    async _willAppear({ context, payload }) {
+        try {
+            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+            if (sonarMode === 'streamer') {
+                volumeDataMedia = volumeData.devices.media.streamer.volume;
+            }else{
+                volumeDataMedia = volumeData.devices.media.classic.volume;
+            }    
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataMedia * 100) + "%");
+        } catch (error) {
+            console.error("Error on connect:", error);
+        }
+    },
     async dialRotate(data) {
         let mixerSelected = 'media';
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
@@ -312,6 +361,19 @@ plugin.mediaAction = new Actions({
 
 plugin.auxAction = new Actions({
     default: {},
+    async _willAppear({ context, payload }) {
+        try {
+            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+            if (sonarMode === 'streamer') {
+                volumeDataAux = volumeData.devices.aux.streamer.volume;
+            }else{
+                volumeDataAux = volumeData.devices.aux.classic.volume;
+            }       
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataAux * 100) + "%");
+        } catch (error) {
+            console.error("Error on connect:", error);
+        }
+    },
     async dialRotate(data) {
         let mixerSelected = 'aux';
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
@@ -366,6 +428,21 @@ plugin.auxAction = new Actions({
 
 plugin.auxMediaAction = new Actions({
     default: {},
+    async _willAppear({ context, payload }) {
+        try {
+            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+            if (sonarMode === 'streamer') {
+                volumeDataAux = volumeData.devices.aux.streamer.volume;
+                volumeDataMedia = volumeData.devices.media.streamer.volume;
+            }else{
+                volumeDataAux = volumeData.devices.aux.classic.volume;
+                volumeDataMedia = volumeData.devices.media.classic.volume;
+            }    
+            window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+        } catch (error) {
+            console.error("Error on connect:", error);
+        }
+    },
     async dialRotate(data) {
         volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
         console.log(volumeData)
