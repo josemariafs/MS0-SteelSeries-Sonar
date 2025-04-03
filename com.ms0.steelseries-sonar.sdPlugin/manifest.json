@@ -1,7 +1,7 @@
 {
   "Actions": [
     {
-      "Icon": "static/icon",
+      "Icon": "static/iconMaster",
       "Name": "Master Dial Volume Mixer",
 
       "States": [
@@ -22,7 +22,7 @@
       "PropertyInspectorPath": "propertyInspector/masterAction/index.html"
     },
     {
-      "Icon": "static/icon",
+      "Icon": "static/iconGame",
       "Name": "Game Dial Volume Mixer",
       "States": [
         {
@@ -41,7 +41,7 @@
       "PropertyInspectorPath": "propertyInspector/gameAction/index.html"
     },
     {
-      "Icon": "static/icon",
+      "Icon": "static/iconChat",
       "Name": "Chat Dial Volume Mixer",
       "States": [
         {
@@ -60,7 +60,7 @@
       "PropertyInspectorPath": "propertyInspector/chatAction/index.html"
     },
     {
-      "Icon": "static/icon",
+      "Icon": "static/iconMedia",
       "Name": "Media Dial Volume Mixer",
       "States": [
         {
@@ -79,7 +79,7 @@
       "PropertyInspectorPath": "propertyInspector/mediaAction/index.html"
     },
     {
-      "Icon": "static/icon",
+      "Icon": "static/iconAux",
       "Name": "Aux Dial Volume Mixer",
       "States": [
         {
@@ -98,7 +98,7 @@
       "PropertyInspectorPath": "propertyInspector/auxAction/index.html"
     },
     {
-      "Icon": "static/icon",
+      "Icon": "static/iconAuxMedia",
       "Name": "Aux + Media Dial Volume Mixer",
       "States": [
         {
