@@ -49,38 +49,96 @@ async function setPut(url){
 });
 }
 
+// Modificar la función updateAllVolumes para también actualizar la interfaz
+async function updateAllVolumes() {
+    try {
+        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+        
+        if (sonarMode === 'streamer') {
+            volumeDataMaster = volumeData.masters.streamer.volume;
+            volumeDataGame = volumeData.devices.game.streamer.volume;
+            volumeDataChat = volumeData.devices.chatRender.streamer.volume;
+            volumeDataMedia = volumeData.devices.media.streamer.volume;
+            volumeDataAux = volumeData.devices.aux.streamer.volume;
+        } else {
+            volumeDataMaster = volumeData.masters.classic.volume;
+            volumeDataGame = volumeData.devices.game.classic.volume;
+            volumeDataChat = volumeData.devices.chatRender.classic.volume;
+            volumeDataMedia = volumeData.devices.media.classic.volume;
+            volumeDataAux = volumeData.devices.aux.classic.volume;
+        }
 
+        // Actualizar la interfaz para todos los controles activos
+        updateDisplays();
+    } catch (error) {
+        console.error("Error updating volumes:", error);
+    }
+}
 
-fetch(
-    "file:///C:/ProgramData/SteelSeries/SteelSeries%20Engine%203/coreProps.json"
-  )
+// Nueva función para actualizar las pantallas de todos los controles
+function updateDisplays() {
+    // Actualizar Master
+    if (plugin.masterAction.contextList && plugin.masterAction.contextList.length > 0) {
+        plugin.masterAction.contextList.forEach(context => {
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataMaster * 100) + "%");
+        });
+    }
+    
+    // Actualizar Game
+    if (plugin.gameAction.contextList && plugin.gameAction.contextList.length > 0) {
+        plugin.gameAction.contextList.forEach(context => {
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataGame * 100) + "%");
+        });
+    }
+    
+    // Actualizar Chat
+    if (plugin.chatAction.contextList && plugin.chatAction.contextList.length > 0) {
+        plugin.chatAction.contextList.forEach(context => {
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataChat * 100) + "%");
+        });
+    }
+    
+    // Actualizar Media
+    if (plugin.mediaAction.contextList && plugin.mediaAction.contextList.length > 0) {
+        plugin.mediaAction.contextList.forEach(context => {
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataMedia * 100) + "%");
+        });
+    }
+    
+    // Actualizar Aux
+    if (plugin.auxAction.contextList && plugin.auxAction.contextList.length > 0) {
+        plugin.auxAction.contextList.forEach(context => {
+            window.socket.setTitle(context, alignRight + parseInt(volumeDataAux * 100) + "%");
+        });
+    }
+    
+    // Actualizar AuxMedia
+    if (plugin.auxMediaAction.contextList && plugin.auxMediaAction.contextList.length > 0) {
+        plugin.auxMediaAction.contextList.forEach(context => {
+            window.socket.setTitle(context, parseInt(volumeDataAux * 100) + "%" + " / " + parseInt(volumeDataMedia * 100) + "%");
+        });
+    }
+}
+
+// Modificar la parte del fetch inicial para usar updateAllVolumes en lugar de las actualizaciones manuales
+fetch("file:///C:/ProgramData/SteelSeries/SteelSeries%20Engine%203/coreProps.json")
     .then((response) => response.json())
     .then(async (data) => {
-
-      ggEncryptedAddress = data.ggEncryptedAddress;
-
-      let subAppsData = await getFetch(
-        "https://" + ggEncryptedAddress + "/subApps"
-      );
-  
-      webServerAddress = subAppsData.subApps.sonar.metadata.webServerAddress;
-      sonarMode = await getFetch(webServerAddress + "/mode/");
-  
-      if (sonarMode === "stream"){
-          sonarMode = "streamer";
-      }
-  
-      volumeData = await getFetch(
-        webServerAddress + "/volumeSettings/" + sonarMode
-      );
-  
+        ggEncryptedAddress = data.ggEncryptedAddress;
+        let subAppsData = await getFetch("https://" + ggEncryptedAddress + "/subApps");
+        webServerAddress = subAppsData.subApps.sonar.metadata.webServerAddress;
+        sonarMode = await getFetch(webServerAddress + "/mode/");
+        
+        if (sonarMode === "stream") {
+            sonarMode = "streamer";
+        }
+        
+        // Actualizar volúmenes iniciales y mostrarlos en pantalla
+        await updateAllVolumes();
     })
     .catch((error) => {
-      console.error("Error reading file:", error);
-
+        console.error("Error reading file:", error);
     });
-
-
 
 //////////////////////////////////////////////////////////////////
 ////////////////////////    MASTER      //////////////////////////
@@ -277,7 +335,7 @@ plugin.chatAction = new Actions({
     async dialDown(data) {
         console.log("Dial down chat");
         console.log(data);
-        let mixerSelected = 'chat';
+        let mixerSelected = 'chatRender'; // Cambiado de 'chat' a 'chatRender'
 
         if (volumeDataChat === 0){
             volumeDataChat = prevVolumeDataChat
