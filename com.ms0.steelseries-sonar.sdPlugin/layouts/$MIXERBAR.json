@@ -1,0 +1,29 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+    "id": "$MIXERBAR",
+    "items": [
+        {
+            "key": "title",
+            "type": "text",
+            "rect": [16, 12, 168, 24],
+            "font": { "size": 18, "weight": 600 },
+            "alignment": "center"
+        },
+        {
+            "key": "icon",
+            "type": "pixmap",
+            "rect": [52, 28, 96, 58],
+            "zOrder": 1
+        },
+        {
+            "key": "indicator",
+            "type": "gbar",
+            "subtype": 4,
+            "rect": [18, 50, 164, 24],
+            "bar_h": 18,
+            "border_w": 0,
+            "zOrder": 2,
+            "value": 0
+        }
+    ]
+}

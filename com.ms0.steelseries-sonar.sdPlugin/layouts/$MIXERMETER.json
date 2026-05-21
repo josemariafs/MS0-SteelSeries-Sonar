@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+    "id": "$MIXERMETER",
+    "items": [
+        {
+            "key": "title",
+            "type": "text",
+            "rect": [12, 6, 176, 22],
+            "font": { "size": 16, "weight": 600 },
+            "alignment": "center"
+        },
+        {
+            "key": "icon",
+            "type": "pixmap",
+            "rect": [52, 28, 96, 58],
+            "zOrder": 1
+        },
+        {
+            "key": "indicator",
+            "type": "gbar",
+            "subtype": 4,
+            "rect": [26, 38, 148, 36],
+            "bar_h": 22,
+            "border_w": 0,
+            "bar_bg_c": "0:#19d66b,0.6:#f5d742,0.85:#ff8c1a,1:#ff3030",
+            "value": 0
+        },
+        {
+            "key": "floor",
+            "type": "bar",
+            "subtype": 4,
+            "rect": [26, 78, 148, 6],
+            "bar_bg_c": "transparent",
+            "border_w": 0,
+            "value": 100
+        }
+    ]
+}

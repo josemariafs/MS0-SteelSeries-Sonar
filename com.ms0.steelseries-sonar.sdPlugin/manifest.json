@@ -115,8 +115,32 @@
       "Tooltip": "Pongo algo para ver esto donde sale",
       "UUID": "com.ms0.steelseries-sonar.auxMediaAction",
       "PropertyInspectorPath": "propertyInspector/auxMediaAction/index.html"
+    },
+    {
+      "Icon": "static/icon",
+      "Name": "Toggle Mixer Layout",
+      "States": [
+        {
+          "Image": "static/icon",
+          "FontSize": "16",
+          "TitleAlignment": "center"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Alterna el layout visual de los mixers activos",
+      "UUID": "com.ms0.steelseries-sonar.layoutAction"
     }
 
+  ],
+  "Layouts": [
+    "layouts/$B1.json",
+    "layouts/$AUXMEDIA.json",
+    "layouts/$MIXERMETER.json",
+    "layouts/$AUXMEDIAMETER.json"
   ],
   "SDKVersion": 2,
   "Author": "MS0",

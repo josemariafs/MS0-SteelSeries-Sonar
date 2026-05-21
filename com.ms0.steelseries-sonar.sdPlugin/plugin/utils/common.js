@@ -97,6 +97,26 @@ window.connectElgatoStreamDeckSocket = function () {
         };
     };
 
+    WebSocket.prototype.setImageData = function (context, image) {
+        this.send(JSON.stringify({
+            event: "setImage",
+            context, payload: {
+                target: 0,
+                image
+            }
+        }));
+    };
+
+    WebSocket.prototype.clearImage = function (context) {
+        this.send(JSON.stringify({
+            event: "setImage",
+            context, payload: {
+                target: 0,
+                image: null
+            }
+        }));
+    };
+
     WebSocket.prototype.setTitle = function (context, str, row = 0, num = 6) {
         let newStr = '';
         if (row) {
@@ -128,6 +148,14 @@ window.connectElgatoStreamDeckSocket = function () {
         this.send(JSON.stringify({
             event: "setFeedbackLayout",
             payload: { layout },
+            context
+        }));
+    };
+
+    WebSocket.prototype.setFeedback = function (context, payload) {
+        this.send(JSON.stringify({
+            event: "setFeedback",
+            payload,
             context
         }));
     };

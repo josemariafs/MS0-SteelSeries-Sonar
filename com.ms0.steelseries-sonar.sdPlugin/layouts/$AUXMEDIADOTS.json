@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+    "id": "$AUXMEDIADOTS",
+    "items": [
+        {
+            "key": "title",
+            "type": "text",
+            "rect": [12, 6, 176, 20],
+            "font": { "size": 15, "weight": 600 },
+            "alignment": "center"
+        },
+        {
+            "key": "auxLabel",
+            "type": "text",
+            "rect": [16, 34, 40, 18],
+            "font": { "size": 13, "weight": 600 },
+            "alignment": "left"
+        },
+        {
+            "key": "auxIcon",
+            "type": "pixmap",
+            "rect": [58, 28, 42, 28],
+            "zOrder": 1
+        },
+        {
+            "key": "auxIndicator",
+            "type": "gbar",
+            "subtype": 4,
+            "rect": [62, 34, 120, 18],
+            "bar_h": 8,
+            "border_w": 0,
+            "bar_bg_c": "0:#00d5ff,0.5:#7a7cff,1:#ff4fc3",
+            "value": 0
+        },
+        {
+            "key": "mediaLabel",
+            "type": "text",
+            "rect": [16, 66, 40, 18],
+            "font": { "size": 13, "weight": 600 },
+            "alignment": "left"
+        },
+        {
+            "key": "mediaIcon",
+            "type": "pixmap",
+            "rect": [58, 60, 42, 28],
+            "zOrder": 1
+        },
+        {
+            "key": "mediaIndicator",
+            "type": "gbar",
+            "subtype": 4,
+            "rect": [62, 66, 120, 18],
+            "bar_h": 8,
+            "border_w": 0,
+            "bar_bg_c": "0:#00d5ff,0.5:#7a7cff,1:#ff4fc3",
+            "value": 0
+        }
+    ]
+}
