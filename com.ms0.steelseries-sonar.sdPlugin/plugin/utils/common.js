@@ -22,11 +22,18 @@ class Actions {
     }
     willAppear(data) {
         const { context, payload: { settings } } = data;
+        this.contextList = this.contextList || [];
+        if (!this.contextList.includes(context)) {
+            this.contextList.push(context);
+        }
         this.data[context] = Object.assign({ ...this.default }, settings);
         this._willAppear?.(data);
     }
     willDisappear(data) {
         this._willDisappear?.(data);
+        if (this.contextList) {
+            this.contextList = this.contextList.filter(context => context !== data.context);
+        }
         delete this.data[data.context];
     }
 }

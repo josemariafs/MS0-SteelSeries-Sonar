@@ -2,576 +2,396 @@
 /// <reference path="./utils/axios.js" />
 /// <reference path="./utils/worker.js" />
 
-
-
 const plugin = new Plugins("Dials Volume Mixer");
-let ggEncryptedAddress = ''
-let webServerAddress = '';
-let sonarMode = '';
-let volumeDataMaster = '';
-let prevVolumeDataMaster = '';
+const CORE_PROPS_URL = "file:///C:/ProgramData/SteelSeries/SteelSeries%20Engine%203/coreProps.json";
+const SYNC_INTERVAL_MS = 3000;
+const RETRY_INTERVAL_MS = 5000;
+const VOLUME_STEP = 0.05;
+const MUTED_EPSILON = 0.001;
 
-let volumeDataGame = '';
-let prevVolumeDataGame = '';
+let ggEncryptedAddress = "";
+let webServerAddress = "";
+let sonarMode = "";
+let syncTimer = null;
+let retryTimer = null;
+let isSyncing = false;
+let syncPromise = null;
+let isInitializing = false;
+let alignRight = "          ";
 
-let volumeDataChat = '';
-let prevVolumeDataChat = '';
+const volumeState = {
+    master: 0,
+    game: 0,
+    chat: 0,
+    media: 0,
+    aux: 0
+};
 
-let volumeDataMedia = '';
-let prevVolumeDataMedia = '';
+const previousVolumeState = {
+    master: 0.5,
+    game: 0.5,
+    chat: 0.5,
+    media: 0.5,
+    aux: 0.5
+};
 
-let volumeDataAux = '';
-let prevVolumeDataAux = '';
-
-let volumeDataAuxMedia = '';
-let prevVolumeDataAuxMedia = '';
-
-let alignRight = "          "
-
-//////////////////////////////////////////////////
- 
-async function getFetch(url) {
-    try {
-      const response = await fetch(url).then((response) => response.json());
-      return response;
-    } catch (error) {
-      console.error("Error in getFetch:", error);
-      throw error;
-    }
-  }
-
-async function setPut(url){
-  fetch(url, {
-    method: 'PUT',
-    headers: {
-        'Content-Type': 'application/json'
+const CHANNELS = {
+    master: {
+        actionName: "masterAction",
+        apiChannel: "master",
+        read: data => data.masters[sonarMode].volume,
+        format: value => alignRight + formatPercent(value)
     },
-});
+    game: {
+        actionName: "gameAction",
+        apiChannel: "game",
+        read: data => data.devices.game[sonarMode].volume,
+        format: value => alignRight + formatPercent(value),
+        layout: "$B1"
+    },
+    chat: {
+        actionName: "chatAction",
+        apiChannel: "chatRender",
+        read: data => data.devices.chatRender[sonarMode].volume,
+        format: value => alignRight + formatPercent(value)
+    },
+    media: {
+        actionName: "mediaAction",
+        apiChannel: "media",
+        read: data => data.devices.media[sonarMode].volume,
+        format: value => alignRight + formatPercent(value)
+    },
+    aux: {
+        actionName: "auxAction",
+        apiChannel: "aux",
+        read: data => data.devices.aux[sonarMode].volume,
+        format: value => alignRight + formatPercent(value)
+    }
+};
+
+async function fetchWithTimeout(url, options = {}) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), options.timeout || 5000);
+    try {
+        return await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
+    } finally {
+        clearTimeout(timeout);
+    }
 }
 
-// Modificar la función updateAllVolumes para también actualizar la interfaz
-async function updateAllVolumes() {
-    try {
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        
-        if (sonarMode === 'streamer') {
-            volumeDataMaster = volumeData.masters.streamer.volume;
-            volumeDataGame = volumeData.devices.game.streamer.volume;
-            volumeDataChat = volumeData.devices.chatRender.streamer.volume;
-            volumeDataMedia = volumeData.devices.media.streamer.volume;
-            volumeDataAux = volumeData.devices.aux.streamer.volume;
-        } else {
-            volumeDataMaster = volumeData.masters.classic.volume;
-            volumeDataGame = volumeData.devices.game.classic.volume;
-            volumeDataChat = volumeData.devices.chatRender.classic.volume;
-            volumeDataMedia = volumeData.devices.media.classic.volume;
-            volumeDataAux = volumeData.devices.aux.classic.volume;
-        }
+async function getFetch(url) {
+    const response = await fetchWithTimeout(url);
+    if (!response.ok) {
+        throw new Error("GET failed " + response.status + " for " + url);
+    }
+    return response.json();
+}
 
-        // Actualizar la interfaz para todos los controles activos
+async function setPut(url) {
+    const response = await fetchWithTimeout(url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    if (!response.ok) {
+        throw new Error("PUT failed " + response.status + " for " + url);
+    }
+}
+
+function clampVolume(value) {
+    return Math.min(1, Math.max(0, value));
+}
+
+function formatPercent(value) {
+    return parseInt(clampVolume(value) * 100) + "%";
+}
+
+function normalizeMode(mode) {
+    return mode === "stream" ? "streamer" : mode;
+}
+
+function canUseSonar() {
+    return Boolean(webServerAddress && sonarMode);
+}
+
+function setTitle(context, title) {
+    if (window.socket && context) {
+        window.socket.setTitle(context, title);
+    }
+}
+
+function setActionTitle(actionName, title) {
+    const action = plugin[actionName];
+    if (!action || !action.contextList) {
+        return;
+    }
+    action.contextList.forEach(context => setTitle(context, title));
+}
+
+function showActionError(actionName) {
+    setActionTitle(actionName, alignRight + "SONAR?");
+}
+
+function showAllErrors() {
+    Object.keys(CHANNELS).forEach(key => showActionError(CHANNELS[key].actionName));
+    setActionTitle("auxMediaAction", "SONAR?");
+}
+
+function updateDisplays() {
+    Object.keys(CHANNELS).forEach(key => {
+        const channel = CHANNELS[key];
+        setActionTitle(channel.actionName, channel.format(volumeState[key]));
+    });
+    setActionTitle("auxMediaAction", formatPercent(volumeState.aux) + " / " + formatPercent(volumeState.media));
+}
+
+async function getVolumeSettings() {
+    if (!canUseSonar()) {
+        throw new Error("Sonar is not initialized");
+    }
+    return getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
+}
+
+function applyVolumeSettings(data) {
+    Object.keys(CHANNELS).forEach(key => {
+        const nextValue = clampVolume(CHANNELS[key].read(data));
+        if (nextValue > MUTED_EPSILON) {
+            previousVolumeState[key] = nextValue;
+        }
+        volumeState[key] = nextValue;
+    });
+}
+
+async function updateAllVolumes(options = {}) {
+    const force = Boolean(options.force);
+    const suppressErrors = options.suppressErrors !== false;
+    if (!canUseSonar()) {
+        const error = new Error("Sonar is not initialized");
+        showAllErrors();
+        if (!suppressErrors) {
+            throw error;
+        }
+        return;
+    }
+    if (isSyncing) {
+        if (force && syncPromise) {
+            await syncPromise.catch(() => {});
+        } else {
+            return syncPromise;
+        }
+    }
+    isSyncing = true;
+    syncPromise = (async () => {
+        sonarMode = normalizeMode(await getFetch(webServerAddress + "/mode/"));
+        const data = await getVolumeSettings();
+        applyVolumeSettings(data);
         updateDisplays();
+    })();
+    try {
+        await syncPromise;
     } catch (error) {
         console.error("Error updating volumes:", error);
+        showAllErrors();
+        scheduleSonarRetry();
+        if (!suppressErrors) {
+            throw error;
+        }
+    } finally {
+        isSyncing = false;
+        syncPromise = null;
     }
 }
 
-// Nueva función para actualizar las pantallas de todos los controles
-function updateDisplays() {
-    // Actualizar Master
-    if (plugin.masterAction.contextList && plugin.masterAction.contextList.length > 0) {
-        plugin.masterAction.contextList.forEach(context => {
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataMaster * 100) + "%");
-        });
+async function writeVolume(apiChannel, value) {
+    await setPut(webServerAddress + "/volumeSettings/" + sonarMode + "/" + apiChannel + "/Volume/" + JSON.stringify(clampVolume(value)));
+}
+
+async function writeAndConfirm(changes) {
+    if (!canUseSonar()) {
+        throw new Error("Sonar is not initialized");
     }
-    
-    // Actualizar Game
-    if (plugin.gameAction.contextList && plugin.gameAction.contextList.length > 0) {
-        plugin.gameAction.contextList.forEach(context => {
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataGame * 100) + "%");
-        });
+    try {
+        for (const change of changes) {
+            await writeVolume(change.apiChannel, change.value);
+        }
+    } catch (error) {
+        await updateAllVolumes({ force: true }).catch(() => {});
+        throw error;
     }
-    
-    // Actualizar Chat
-    if (plugin.chatAction.contextList && plugin.chatAction.contextList.length > 0) {
-        plugin.chatAction.contextList.forEach(context => {
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataChat * 100) + "%");
-        });
+    await updateAllVolumes({ force: true, suppressErrors: false });
+}
+
+function startSyncTimer() {
+    if (syncTimer) {
+        return;
     }
-    
-    // Actualizar Media
-    if (plugin.mediaAction.contextList && plugin.mediaAction.contextList.length > 0) {
-        plugin.mediaAction.contextList.forEach(context => {
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataMedia * 100) + "%");
-        });
+    syncTimer = setInterval(updateAllVolumes, SYNC_INTERVAL_MS);
+}
+
+function scheduleSonarRetry() {
+    if (retryTimer) {
+        return;
     }
-    
-    // Actualizar Aux
-    if (plugin.auxAction.contextList && plugin.auxAction.contextList.length > 0) {
-        plugin.auxAction.contextList.forEach(context => {
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataAux * 100) + "%");
-        });
-    }
-    
-    // Actualizar AuxMedia
-    if (plugin.auxMediaAction.contextList && plugin.auxMediaAction.contextList.length > 0) {
-        plugin.auxMediaAction.contextList.forEach(context => {
-            window.socket.setTitle(context, parseInt(volumeDataAux * 100) + "%" + " / " + parseInt(volumeDataMedia * 100) + "%");
-        });
+    retryTimer = setInterval(async () => {
+        try {
+            await initializeSonar();
+        } catch (error) {
+            console.error("Error retrying Sonar initialization:", error);
+        }
+    }, RETRY_INTERVAL_MS);
+}
+
+function clearRetryTimer() {
+    if (retryTimer) {
+        clearInterval(retryTimer);
+        retryTimer = null;
     }
 }
 
-// Modificar la parte del fetch inicial para usar updateAllVolumes en lugar de las actualizaciones manuales
-fetch("file:///C:/ProgramData/SteelSeries/SteelSeries%20Engine%203/coreProps.json")
-    .then((response) => response.json())
-    .then(async (data) => {
-        ggEncryptedAddress = data.ggEncryptedAddress;
-        let subAppsData = await getFetch("https://" + ggEncryptedAddress + "/subApps");
+async function initializeSonar() {
+    if (isInitializing) {
+        return;
+    }
+    isInitializing = true;
+    try {
+        const coreProps = await fetchWithTimeout(CORE_PROPS_URL).then(response => response.json());
+        ggEncryptedAddress = coreProps.ggEncryptedAddress;
+
+        const subAppsData = await getFetch("https://" + ggEncryptedAddress + "/subApps");
         webServerAddress = subAppsData.subApps.sonar.metadata.webServerAddress;
-        sonarMode = await getFetch(webServerAddress + "/mode/");
-        
-        if (sonarMode === "stream") {
-            sonarMode = "streamer";
+        sonarMode = normalizeMode(await getFetch(webServerAddress + "/mode/"));
+
+        clearRetryTimer();
+        await updateAllVolumes({ force: true, suppressErrors: false });
+        startSyncTimer();
+    } finally {
+        isInitializing = false;
+    }
+}
+
+initializeSonar().catch(error => {
+    console.error("Error initializing Sonar:", error);
+    showAllErrors();
+    scheduleSonarRetry();
+});
+
+function createVolumeAction(channelKey) {
+    const channel = CHANNELS[channelKey];
+
+    return new Actions({
+        default: {},
+        async _willAppear({ context }) {
+            if (channel.layout) {
+                window.socket.setFeedbackLayout(context, channel.layout);
+            }
+            try {
+                await updateAllVolumes({ force: true, suppressErrors: false });
+                setTitle(context, channel.format(volumeState[channelKey]));
+            } catch (error) {
+                console.error("Error on connect:", error);
+                showActionError(channel.actionName);
+                scheduleSonarRetry();
+            }
+        },
+
+        async dialRotate(data) {
+            try {
+                if (data.payload.ticks === 0) {
+                    return;
+                }
+                const direction = data.payload.ticks > 0 ? 1 : -1;
+                const current = volumeState[channelKey];
+                const nextValue = clampVolume(current + (direction * VOLUME_STEP));
+                await writeAndConfirm([{ apiChannel: channel.apiChannel, value: nextValue }]);
+            } catch (error) {
+                console.error("Error rotating dial:", error);
+                setActionTitle(channel.actionName, alignRight + "ERROR");
+                scheduleSonarRetry();
+            }
+        },
+
+        async dialDown(data) {
+            try {
+                const current = volumeState[channelKey];
+                const nextValue = current <= MUTED_EPSILON ? previousVolumeState[channelKey] : 0;
+                if (current > MUTED_EPSILON) {
+                    previousVolumeState[channelKey] = current;
+                }
+                await writeAndConfirm([{ apiChannel: channel.apiChannel, value: nextValue }]);
+            } catch (error) {
+                console.error("Error pressing dial:", error);
+                setActionTitle(channel.actionName, alignRight + "ERROR");
+                scheduleSonarRetry();
+            }
         }
-        
-        // Actualizar volúmenes iniciales y mostrarlos en pantalla
-        await updateAllVolumes();
-    })
-    .catch((error) => {
-        console.error("Error reading file:", error);
     });
+}
 
-//////////////////////////////////////////////////////////////////
-////////////////////////    MASTER      //////////////////////////
-//////////////////////////////////////////////////////////////////
-
-plugin.masterAction = new Actions({
-    default: {},
-    async _willAppear({ context, payload }) {
-        try {
-            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-            if (sonarMode === 'streamer') {
-                volumeDataMaster = volumeData.masters.streamer.volume;
-            } else {
-                volumeDataMaster = volumeData.masters.classic.volume;
-            }
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataMaster * 100) + "%");
-        } catch (error) {
-            console.error("Error on connect:", error);
-        }
-    },
-
-    async dialRotate(data) {
-        let mixerSelected = 'master';
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        console.log(108)
-        console.log(volumeData)
-        if (sonarMode === 'streamer') {
-            volumeDataMaster = volumeData.masters.streamer.volume;
-        }else{
-            volumeDataMaster = volumeData.masters.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataMaster + 0.05;
-                    console.log(124)
-                    console.log(aux)
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }else{
-                    let aux = volumeDataMaster - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }
-                break;
-            }
-    },
-    async dialDown(data) {
-        let mixerSelected = 'master';
-
-        if (volumeDataMaster === 0){
-            volumeDataMaster = prevVolumeDataMaster
-            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMaster * 100) +"%");
-
-        }else{
-            prevVolumeDataMaster = volumeDataMaster;
-            volumeDataMaster = 0;
-            window.socket.setTitle(data.context, alignRight+"MUTED");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMaster));
-    }
-});
-
-
-//////////////////////////////////////////////////////////////////
-////////////////////////      GAME      //////////////////////////
-//////////////////////////////////////////////////////////////////
-
-plugin.gameAction = new Actions({
-    default: {},
-    async _willAppear({ context, payload }) {
-        try {
-            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-            if (sonarMode === 'streamer') {
-                volumeDataGame = volumeData.devices.game.streamer.volume;
-            }else{
-                volumeDataGame = volumeData.devices.game.classic.volume;
-            }    
-            const layout = "$B1"
-
-            window.socket.setFeedbackLayout(context,layout); 
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataGame * 100) + "%");
-        } catch (error) {
-            console.error("Error on connect:", error);
-        }
-
-    },
-    async dialRotate(data) {
-        let mixerSelected = 'game';
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        if (sonarMode === 'streamer') {
-            volumeDataGame = volumeData.devices.game.streamer.volume;
-        }else{
-            volumeDataGame = volumeData.devices.game.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataGame + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }else{
-                    let aux = volumeDataGame - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }
-                break;
-            }
-    },
-    async dialDown(data) {
-        let mixerSelected = 'game';
-
-        if (volumeDataGame === 0){
-            volumeDataGame = prevVolumeDataGame
-            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataGame * 100) +"%");
-
-        }else{
-            prevVolumeDataGame = volumeDataGame;
-            volumeDataGame = 0;
-            window.socket.setTitle(data.context, alignRight+"MUTED");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataGame));
-    }
-});
-
-//////////////////////////////////////////////////////////////////
-////////////////////////      CHAT      //////////////////////////
-//////////////////////////////////////////////////////////////////
-
-plugin.chatAction = new Actions({
-    default: {},
-    async _willAppear({ context, payload }) {
-        try {
-            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-            if (sonarMode === 'streamer') {
-                volumeDataChat = volumeData.devices.chatRender.streamer.volume;
-            }else{
-                volumeDataChat = volumeData.devices.chatRender.classic.volume;
-            }      
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataChat * 100) + "%");
-        } catch (error) {
-            console.error("Error on connect:", error);
-        }
-    },
-    async dialRotate(data) {
-        let mixerSelected = 'chatRender';
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        console.log(volumeData)
-        if (sonarMode === 'streamer') {
-            volumeDataChat = volumeData.devices.chatRender.streamer.volume;
-        }else{
-            volumeDataChat = volumeData.devices.chatRender.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataChat + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }else{
-                    let aux = volumeDataChat - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }
-                break;
-            }
-    },
-    async dialDown(data) {
-        console.log("Dial down chat");
-        console.log(data);
-        let mixerSelected = 'chatRender'; // Cambiado de 'chat' a 'chatRender'
-
-        if (volumeDataChat === 0){
-            volumeDataChat = prevVolumeDataChat
-            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataChat * 100) +"%");
-
-        }else{
-            prevVolumeDataChat = volumeDataChat;
-            volumeDataChat = 0;
-            window.socket.setTitle(data.context, alignRight+"MUTED");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataChat));
-    }
-});
-
-//////////////////////////////////////////////////////////////////
-////////////////////////     MEDIA      //////////////////////////
-//////////////////////////////////////////////////////////////////
-
-plugin.mediaAction = new Actions({
-    default: {},
-    async _willAppear({ context, payload }) {
-        try {
-            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-            if (sonarMode === 'streamer') {
-                volumeDataMedia = volumeData.devices.media.streamer.volume;
-            }else{
-                volumeDataMedia = volumeData.devices.media.classic.volume;
-            }    
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataMedia * 100) + "%");
-        } catch (error) {
-            console.error("Error on connect:", error);
-        }
-    },
-    async dialRotate(data) {
-        let mixerSelected = 'media';
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        console.log(volumeData)
-        if (sonarMode === 'streamer') {
-            volumeDataMedia = volumeData.devices.media.streamer.volume;
-        }else{
-            volumeDataMedia = volumeData.devices.media.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataMedia + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }else{
-                    let aux = volumeDataMedia - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }
-                break;
-            }
-    },
-    async dialDown(data) {
-        let mixerSelected = 'media';
-
-        if (volumeDataMedia === 0){
-            volumeDataMedia = prevVolumeDataMedia
-            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataMedia * 100) +"%");
-
-        }else{
-            prevVolumeDataMedia = volumeDataMedia;
-            volumeDataMedia = 0;
-            window.socket.setTitle(data.context, alignRight+"MUTED");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataMedia));
-    }
-});
-
-//////////////////////////////////////////////////////////////////
-////////////////////////      AUX       //////////////////////////
-//////////////////////////////////////////////////////////////////
-
-plugin.auxAction = new Actions({
-    default: {},
-    async _willAppear({ context, payload }) {
-        try {
-            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-            if (sonarMode === 'streamer') {
-                volumeDataAux = volumeData.devices.aux.streamer.volume;
-            }else{
-                volumeDataAux = volumeData.devices.aux.classic.volume;
-            }       
-            window.socket.setTitle(context, alignRight + parseInt(volumeDataAux * 100) + "%");
-        } catch (error) {
-            console.error("Error on connect:", error);
-        }
-    },
-    async dialRotate(data) {
-        let mixerSelected = 'aux';
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        console.log(volumeData)
-        if (sonarMode === 'streamer') {
-            volumeDataAux = volumeData.devices.aux.streamer.volume;
-        }else{
-            volumeDataAux = volumeData.devices.aux.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataAux + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }else{
-                    let aux = volumeDataAux - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, alignRight+parseInt(aux * 100) +"%");
-                }
-                break;
-            }
-    },
-    async dialDown(data) {
-        let mixerSelected = 'aux';
-
-        if (volumeDataAux === 0){
-            volumeDataAux = prevVolumeDataAux
-            window.socket.setTitle(data.context, alignRight+parseInt(volumeDataAux * 100) +"%");
-
-        }else{
-            prevVolumeDataAux = volumeDataAux;
-            volumeDataAux = 0;
-            window.socket.setTitle(data.context, alignRight+"MUTED");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/'+mixerSelected+'/Volume/'+JSON.stringify(volumeDataAux));
-    }
-});
-
-//////////////////////////////////////////////////////////////////
-///////////////////////    AUX+MEDIA    //////////////////////////
-//////////////////////////////////////////////////////////////////
+plugin.masterAction = createVolumeAction("master");
+plugin.gameAction = createVolumeAction("game");
+plugin.chatAction = createVolumeAction("chat");
+plugin.mediaAction = createVolumeAction("media");
+plugin.auxAction = createVolumeAction("aux");
 
 plugin.auxMediaAction = new Actions({
     default: {},
-    async _willAppear({ context, payload }) {
+    async _willAppear({ context }) {
         try {
-            volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-            if (sonarMode === 'streamer') {
-                volumeDataAux = volumeData.devices.aux.streamer.volume;
-                volumeDataMedia = volumeData.devices.media.streamer.volume;
-            }else{
-                volumeDataAux = volumeData.devices.aux.classic.volume;
-                volumeDataMedia = volumeData.devices.media.classic.volume;
-            }    
-            window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+            await updateAllVolumes({ force: true, suppressErrors: false });
+            setTitle(context, formatPercent(volumeState.aux) + " / " + formatPercent(volumeState.media));
         } catch (error) {
             console.error("Error on connect:", error);
+            setActionTitle("auxMediaAction", "SONAR?");
+            scheduleSonarRetry();
         }
     },
+
     async dialRotate(data) {
-        volumeData = await getFetch(webServerAddress + "/volumeSettings/" + sonarMode);
-        console.log(volumeData)
-        if (sonarMode === 'streamer') {
-            volumeDataAux = volumeData.devices.aux.streamer.volume;
-            volumeDataMedia = volumeData.devices.media.streamer.volume;
-        }else{
-            volumeDataAux = volumeData.devices.aux.classic.volume;
-            volumeDataMedia = volumeData.devices.media.classic.volume;
-        }       
-
-
-        switch (data.event) {
-            case 'dialRotate':
-                if (data.payload.ticks > 0) {
-                    let aux = volumeDataAux + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/aux/Volume/'+JSON.stringify(aux));
-                    aux = volumeDataMedia + 0.05;
-                    if (aux > 1){
-                        aux = 1;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(aux * 100) +"%");
-                }else{
-                    let aux = volumeDataAux - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/aux/Volume/'+JSON.stringify(aux));
-                    aux = volumeDataMedia - 0.05;
-                    if (aux < 0){
-                        aux = 0;
-                    }
-                    setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(aux));
-                    window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(aux * 100) +"%");
-                }
-                break;
+        try {
+            if (data.payload.ticks === 0) {
+                return;
             }
+            const direction = data.payload.ticks > 0 ? 1 : -1;
+            const nextAux = clampVolume(volumeState.aux + (direction * VOLUME_STEP));
+            const nextMedia = clampVolume(volumeState.media + (direction * VOLUME_STEP));
+            await writeAndConfirm([
+                { apiChannel: CHANNELS.aux.apiChannel, value: nextAux },
+                { apiChannel: CHANNELS.media.apiChannel, value: nextMedia }
+            ]);
+        } catch (error) {
+            console.error("Error rotating Aux + Media dial:", error);
+            setActionTitle("auxMediaAction", "ERROR");
+            scheduleSonarRetry();
+        }
     },
+
     async dialDown(data) {
+        try {
+            const auxMuted = volumeState.aux <= MUTED_EPSILON;
+            const mediaMuted = volumeState.media <= MUTED_EPSILON;
 
-        if (volumeDataAux === 0){
-            volumeDataAux = prevVolumeDataAux
-            window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
+            if (!auxMuted) {
+                previousVolumeState.aux = volumeState.aux;
+            }
+            if (!mediaMuted) {
+                previousVolumeState.media = volumeState.media;
+            }
 
-        }else{
-            prevVolumeDataAux = volumeDataAux;
-            volumeDataAux = 0;
-            window.socket.setTitle(data.context, "MUTED");
+            const nextAux = auxMuted && mediaMuted ? previousVolumeState.aux : 0;
+            const nextMedia = auxMuted && mediaMuted ? previousVolumeState.media : 0;
 
+            await writeAndConfirm([
+                { apiChannel: CHANNELS.aux.apiChannel, value: nextAux },
+                { apiChannel: CHANNELS.media.apiChannel, value: nextMedia }
+            ]);
+        } catch (error) {
+            console.error("Error pressing Aux + Media dial:", error);
+            setActionTitle("auxMediaAction", "ERROR");
+            scheduleSonarRetry();
         }
-
-        if (volumeDataMedia === 0){
-            volumeDataMedia = prevVolumeDataMedia
-            window.socket.setTitle(data.context, parseInt(volumeDataAux * 100) +"%"+" / "+parseInt(volumeDataMedia * 100) +"%");
-
-        }else{
-            prevVolumeDataMedia = volumeDataMedia;
-            volumeDataMedia = 0;
-            window.socket.setTitle(data.context, "MUTED");
-
-        }
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/mixer/Volume/'+JSON.stringify(volumeDataAux));
-        setPut(webServerAddress + '/volumeSettings/'+sonarMode+'/media/Volume/'+JSON.stringify(volumeDataMedia));
     }
 });
