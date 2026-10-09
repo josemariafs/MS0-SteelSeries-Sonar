@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Alexa Iluminación</title>
+    <link rel="stylesheet" href="../../static/css/sdpi.css">
+    <style>
+        .hint {
+            margin: 8px 16px 12px;
+            line-height: 1.35;
+            color: #c8c8c8;
+        }
+        textarea.sdpi-item-value {
+            min-height: 58px;
+            height: 58px;
+            resize: vertical;
+            padding-top: 4px;
+        }
+        #status {
+            min-height: 32px;
+        }
+        button.wide {
+            width: calc(100% - 20px);
+            margin: 4px 10px 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sdpi-wrapper" style="display: none">
+        <div class="sdpi-heading" id="heading">Comando</div>
+        <p class="hint">Las luces usan las escenas y el grupo Salón de Alexa.</p>
+        <div id="knobBox" hidden>
+            <p class="hint">Cada dial mueve una bombilla. «Todas» pone las tres al mismo brillo. Pulsar un dial apaga sus bombillas. El nombre tiene que coincidir con Alexa.</p>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Bombilla 1</div>
+                <input class="sdpi-item-value" id="bulb1Name" type="text" placeholder="Smart Bulb">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Bombilla 2</div>
+                <input class="sdpi-item-value" id="bulb2Name" type="text" placeholder="Smart Bulb 2">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Bombilla 3</div>
+                <input class="sdpi-item-value" id="bulb3Name" type="text" placeholder="Smart Bulb 3">
+            </div>
+        </div>
+        <div id="voiceBox">
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Frase</div>
+            <textarea class="sdpi-item-value" id="phrase" readonly></textarea>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value">
+                <label><input type="checkbox" id="custom"> Personalizar</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <button class="sdpi-item-value" id="test" type="button">Probar frase</button>
+        </div>
+        </div>
+
+        <div class="sdpi-heading">Nombre en Alexa</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Luces</div>
+            <input class="sdpi-item-value" id="lightsName" type="text" placeholder="luces">
+        </div>
+        <p class="hint">Escribe el nombre sin artículo: luces, lámparas del salón.</p>
+
+        <div class="sdpi-heading">Conexión</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Dominio</div>
+            <select class="sdpi-item-value" id="domain">
+                <option value="amazon.es">amazon.es</option>
+                <option value="amazon.com">amazon.com</option>
+                <option value="amazon.co.uk">amazon.co.uk</option>
+                <option value="amazon.de">amazon.de</option>
+                <option value="amazon.fr">amazon.fr</option>
+                <option value="amazon.it">amazon.it</option>
+                <option value="amazon.com.mx">amazon.com.mx</option>
+            </select>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Idioma</div>
+            <input class="sdpi-item-value" id="locale" type="text" value="es-ES">
+        </div>
+        <p class="hint" id="sessionState">Inicia sesión una vez. Después el plugin renueva la sesión solo.</p>
+        <button class="wide" id="startLogin" type="button">Iniciar sesión en Amazon</button>
+        <p class="hint" id="cookieState" hidden>Sesión guardada. Se renueva sola.</p>
+        <div id="cookieBox">
+            <p class="hint" id="cookieHint">Si el inicio de sesión no termina, pega aquí la cabecera Cookie de alexa.amazon.es (F12, Red, recarga).</p>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Cookie</div>
+                <textarea class="sdpi-item-value" id="cookie" placeholder="Solo si quieres sustituir la del .env"></textarea>
+            </div>
+            <button class="wide" id="saveCookie" type="button">Guardar cookie y buscar Echo</button>
+        </div>
+        <button class="wide" id="openAlexa" type="button">Abrir Alexa en el navegador</button>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Echo</div>
+            <select class="sdpi-item-value" id="device"></select>
+        </div>
+        <p class="hint" id="status">Sin configurar.</p>
+    </div>
+    <script src="../utils/common.js"></script>
+    <script src="../utils/action.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

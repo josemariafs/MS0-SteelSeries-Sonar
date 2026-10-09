@@ -1,0 +1,6 @@
+.env
+alexa-session.json
+alexa-device.json
+plugin/brightness.json
+node_modules
+

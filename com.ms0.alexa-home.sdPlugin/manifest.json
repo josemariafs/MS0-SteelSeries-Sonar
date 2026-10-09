@@ -1,0 +1,143 @@
+{
+  "Actions": [
+    {
+      "Icon": "static/icons/heater-on",
+      "Name": "Calefactor: Encender",
+      "States": [
+        {
+          "Image": "static/icons/heater-on",
+          "Title": "ON",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Enciende el CX5120 en la red local",
+      "UUID": "com.ms0.alexa-home.heaterOn",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/heater-off",
+      "Name": "Calefactor: Apagar",
+      "States": [
+        {
+          "Image": "static/icons/heater-off",
+          "Title": "OFF",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Apaga el CX5120 en la red local",
+      "UUID": "com.ms0.alexa-home.heaterOff",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/heater-rotate",
+      "Name": "Calefactor: Rotar",
+      "States": [
+        {
+          "Image": "static/icons/heater-rotate",
+          "Title": "Rotar",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Activa o para la rotación del CX5120",
+      "UUID": "com.ms0.alexa-home.heaterRotate",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/heater-high",
+      "Name": "Calefactor: Calor fuerte",
+      "States": [
+        {
+          "Image": "static/icons/heater-high",
+          "Title": "Fuerte",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone el CX5120 en calor fuerte por la red local",
+      "UUID": "com.ms0.alexa-home.heaterHigh",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/heater-low",
+      "Name": "Calefactor: Calor débil",
+      "States": [
+        {
+          "Image": "static/icons/heater-low",
+          "Title": "Débil",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone el CX5120 en calor débil por la red local",
+      "UUID": "com.ms0.alexa-home.heaterLow",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/heater-fan",
+      "Name": "Calefactor: Ventilador",
+      "States": [
+        {
+          "Image": "static/icons/heater-fan",
+          "Title": "Aire",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone el CX5120 en modo ventilador por la red local",
+      "UUID": "com.ms0.alexa-home.heaterFan",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "MS0",
+  "Name": "Alexa Calefacción",
+  "Icon": "static/icon",
+  "CodePath": "plugin/AlexaHome.exe",
+  "CodePathWin": "plugin/AlexaHome.exe",
+  "Description": "Controla el calefactor CX5120 desde el Stream Dock",
+  "Category": "Alexa Calefacción",
+  "CategoryIcon": "static/icon",
+  "Version": "1.0.0",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "2.9"
+  }
+}

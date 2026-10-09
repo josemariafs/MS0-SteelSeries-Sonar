@@ -1,0 +1,403 @@
+{
+  "Actions": [
+    {
+      "Icon": "static/icons/lights-off",
+      "Name": "Luces: Apagar",
+      "States": [
+        {
+          "Image": "static/icons/lights-off",
+          "Title": "OFF",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Apaga las luces a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsOff",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-on",
+      "Name": "Luces: Encender",
+      "States": [
+        {
+          "Image": "static/icons/lights-on",
+          "Title": "ON",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Enciende las luces a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsOn",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-10",
+      "Name": "Luces: Al 10%",
+      "States": [
+        {
+          "Image": "static/icons/lights-10",
+          "Title": "10%",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces al 10% a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lights10",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-50",
+      "Name": "Luces: Al 50%",
+      "States": [
+        {
+          "Image": "static/icons/lights-50",
+          "Title": "50%",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces al 50% a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lights50",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-100",
+      "Name": "Luces: Al 100%",
+      "States": [
+        {
+          "Image": "static/icons/lights-100",
+          "Title": "100%",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces al 100% a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lights100",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-blue",
+      "Name": "Luces: Color azul",
+      "States": [
+        {
+          "Image": "static/icons/lights-blue",
+          "Title": "Azul",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color azul a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsBlue",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-red",
+      "Name": "Luces: Color rojo",
+      "States": [
+        {
+          "Image": "static/icons/lights-red",
+          "Title": "Rojo",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color rojo a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsRed",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-white",
+      "Name": "Luces: Blancas",
+      "States": [
+        {
+          "Image": "static/icons/lights-white",
+          "Title": "Blanco",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color blanco a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsWhite",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-green",
+      "Name": "Luces: Color verde",
+      "States": [
+        {
+          "Image": "static/icons/lights-green",
+          "Title": "Verde",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color verde a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsGreen",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-yellow",
+      "Name": "Luces: Color amarillo",
+      "States": [
+        {
+          "Image": "static/icons/lights-yellow",
+          "Title": "Amarillo",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color amarillo a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsYellow",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-orange",
+      "Name": "Luces: Color naranja",
+      "States": [
+        {
+          "Image": "static/icons/lights-orange",
+          "Title": "Naranja",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color naranja a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsOrange",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-purple",
+      "Name": "Luces: Color violeta",
+      "States": [
+        {
+          "Image": "static/icons/lights-purple",
+          "Title": "Violeta",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color violeta a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsPurple",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-pink",
+      "Name": "Luces: Color rosa",
+      "States": [
+        {
+          "Image": "static/icons/lights-pink",
+          "Title": "Rosa",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color rosa a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsPink",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-cyan",
+      "Name": "Luces: Color cian",
+      "States": [
+        {
+          "Image": "static/icons/lights-cyan",
+          "Title": "Cian",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color cian a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsCyan",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/lights-gold",
+      "Name": "Luces: Color dorado",
+      "States": [
+        {
+          "Image": "static/icons/lights-gold",
+          "Title": "Dorado",
+          "FontSize": "16",
+          "TitleAlignment": "bottom"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Pone las luces de color dorado a través de Alexa",
+      "UUID": "com.ms0.alexa-home.lightsGold",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/knob-all",
+      "Name": "Luces: Intensidad de las tres",
+      "States": [
+        {
+          "Image": "static/icons/knob-all",
+          "Title": "Todas",
+          "FontSize": "20",
+          "TitleAlignment": "center"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Regula a la vez el brillo de las tres bombillas. Al pulsarlo se apagan.",
+      "UUID": "com.ms0.alexa-home.brightnessAll",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/knob-1",
+      "Name": "Luces: Bombilla 1",
+      "States": [
+        {
+          "Image": "static/icons/knob-1",
+          "Title": "1",
+          "FontSize": "20",
+          "TitleAlignment": "center"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Regula el brillo de la primera bombilla. Al pulsarlo se apaga.",
+      "UUID": "com.ms0.alexa-home.brightness1",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/knob-2",
+      "Name": "Luces: Bombilla 2",
+      "States": [
+        {
+          "Image": "static/icons/knob-2",
+          "Title": "2",
+          "FontSize": "20",
+          "TitleAlignment": "center"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Regula el brillo de la segunda bombilla. Al pulsarlo se apaga.",
+      "UUID": "com.ms0.alexa-home.brightness2",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    },
+    {
+      "Icon": "static/icons/knob-3",
+      "Name": "Luces: Bombilla 3",
+      "States": [
+        {
+          "Image": "static/icons/knob-3",
+          "Title": "3",
+          "FontSize": "20",
+          "TitleAlignment": "center"
+        }
+      ],
+      "Controllers": [
+        "Knob"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Regula el brillo de la tercera bombilla. Al pulsarlo se apaga.",
+      "UUID": "com.ms0.alexa-home.brightness3",
+      "PropertyInspectorPath": "propertyInspector/command/index.html"
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "MS0",
+  "Name": "Alexa Iluminación",
+  "Icon": "static/icon",
+  "CodePath": "plugin/AlexaHome.exe",
+  "CodePathWin": "plugin/AlexaHome.exe",
+  "Description": "Controla las luces del salón con Alexa desde el Stream Dock",
+  "Category": "Alexa Iluminación",
+  "CategoryIcon": "static/icon",
+  "Version": "1.0.0",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "2.9"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "Name": "Alexa Iluminación",
+  "Description": "Controla las luces del salón con Alexa desde el Stream Dock",
+  "Category": "Alexa Iluminación",
+  "Localization": {
+    "Frase": "Frase",
+    "Luces": "Luces",
+    "Dominio": "Dominio",
+    "Idioma": "Idioma",
+    "Cookie": "Cookie",
+    "Echo": "Echo"
+  },
+  "com.ms0.alexa-home.lightsOff": {
+    "Name": "Luces: Apagar",
+    "Tooltip": "Apaga las luces a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsOn": {
+    "Name": "Luces: Encender",
+    "Tooltip": "Enciende las luces a través de Alexa"
+  },
+  "com.ms0.alexa-home.lights10": {
+    "Name": "Luces: Al 10%",
+    "Tooltip": "Pone las luces al 10% a través de Alexa"
+  },
+  "com.ms0.alexa-home.lights50": {
+    "Name": "Luces: Al 50%",
+    "Tooltip": "Pone las luces al 50% a través de Alexa"
+  },
+  "com.ms0.alexa-home.lights100": {
+    "Name": "Luces: Al 100%",
+    "Tooltip": "Pone las luces al 100% a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsBlue": {
+    "Name": "Luces: Color azul",
+    "Tooltip": "Pone las luces de color azul a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsRed": {
+    "Name": "Luces: Color rojo",
+    "Tooltip": "Pone las luces de color rojo a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsWhite": {
+    "Name": "Luces: Blancas",
+    "Tooltip": "Pone las luces de color blanco a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsGreen": {
+    "Name": "Luces: Color verde",
+    "Tooltip": "Pone las luces de color verde a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsYellow": {
+    "Name": "Luces: Color amarillo",
+    "Tooltip": "Pone las luces de color amarillo a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsOrange": {
+    "Name": "Luces: Color naranja",
+    "Tooltip": "Pone las luces de color naranja a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsPurple": {
+    "Name": "Luces: Color violeta",
+    "Tooltip": "Pone las luces de color violeta a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsPink": {
+    "Name": "Luces: Color rosa",
+    "Tooltip": "Pone las luces de color rosa a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsCyan": {
+    "Name": "Luces: Color cian",
+    "Tooltip": "Pone las luces de color cian a través de Alexa"
+  },
+  "com.ms0.alexa-home.lightsGold": {
+    "Name": "Luces: Color dorado",
+    "Tooltip": "Pone las luces de color dorado a través de Alexa"
+  },
+  "com.ms0.alexa-home.brightnessAll": {
+    "Name": "Luces: Intensidad de las tres",
+    "Tooltip": "Regula a la vez el brillo de las tres bombillas. Al pulsarlo se apagan."
+  },
+  "com.ms0.alexa-home.brightness1": {
+    "Name": "Luces: Bombilla 1",
+    "Tooltip": "Regula el brillo de la primera bombilla. Al pulsarlo se apaga."
+  },
+  "com.ms0.alexa-home.brightness2": {
+    "Name": "Luces: Bombilla 2",
+    "Tooltip": "Regula el brillo de la segunda bombilla. Al pulsarlo se apaga."
+  },
+  "com.ms0.alexa-home.brightness3": {
+    "Name": "Luces: Bombilla 3",
+    "Tooltip": "Regula el brillo de la tercera bombilla. Al pulsarlo se apaga."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "Name": "Alexa Calefacción",
+  "Description": "Controla el calefactor CX5120 desde el Stream Dock",
+  "Category": "Alexa Calefacción",
+  "Localization": {
+    "Frase": "Frase",
+    "Calefactor": "Calefactor",
+    "Luces": "Luces",
+    "Dominio": "Dominio",
+    "Idioma": "Idioma",
+    "Cookie": "Cookie",
+    "Echo": "Echo"
+  },
+  "com.ms0.alexa-home.heaterOn": {
+    "Name": "Calefactor: Encender",
+    "Tooltip": "Enciende el CX5120 en la red local"
+  },
+  "com.ms0.alexa-home.heaterOff": {
+    "Name": "Calefactor: Apagar",
+    "Tooltip": "Apaga el CX5120 en la red local"
+  },
+  "com.ms0.alexa-home.heaterRotate": {
+    "Name": "Calefactor: Rotar",
+    "Tooltip": "Activa o para la rotación del CX5120"
+  },
+  "com.ms0.alexa-home.heaterHigh": {
+    "Name": "Calefactor: Calor fuerte",
+    "Tooltip": "Pone el CX5120 en calor fuerte por la red local"
+  },
+  "com.ms0.alexa-home.heaterLow": {
+    "Name": "Calefactor: Calor débil",
+    "Tooltip": "Pone el CX5120 en calor débil por la red local"
+  },
+  "com.ms0.alexa-home.heaterFan": {
+    "Name": "Calefactor: Ventilador",
+    "Tooltip": "Pone el CX5120 en modo ventilador por la red local"
+  }
+}

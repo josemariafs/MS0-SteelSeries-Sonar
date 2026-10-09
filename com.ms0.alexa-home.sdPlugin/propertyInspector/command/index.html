@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Alexa Calefacción</title>
+    <link rel="stylesheet" href="../../static/css/sdpi.css">
+    <style>
+        .hint {
+            margin: 8px 16px 12px;
+            line-height: 1.35;
+            color: #c8c8c8;
+        }
+        textarea.sdpi-item-value {
+            min-height: 58px;
+            height: 58px;
+            resize: vertical;
+            padding-top: 4px;
+        }
+        #status {
+            min-height: 32px;
+        }
+        button.wide {
+            width: calc(100% - 20px);
+            margin: 4px 10px 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sdpi-wrapper" style="display: none">
+        <div class="sdpi-heading" id="heading">Calefactor</div>
+        <p class="hint">El CX5120 se controla por la red local. Si la IP del .env no responde, se busca otra al abrir Stream Dock.</p>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Orden</div>
+            <textarea class="sdpi-item-value" id="phrase" readonly></textarea>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">IP</div>
+            <input class="sdpi-item-value" id="host" type="text" readonly>
+        </div>
+        <button class="wide" id="test" type="button">Probar</button>
+        <p class="hint" id="status">Buscando el CX5120...</p>
+    </div>
+    <script src="../utils/common.js"></script>
+    <script src="../utils/action.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

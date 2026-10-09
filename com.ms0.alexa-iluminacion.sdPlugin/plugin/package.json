@@ -1,0 +1,9 @@
+{
+  "name": "ms0-alexa-home",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "dependencies": {
+    "alexa-cookie2": "^5.0.6"
+  }
+}
